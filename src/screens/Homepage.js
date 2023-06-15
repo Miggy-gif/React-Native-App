@@ -1,88 +1,82 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button, FlatList } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 
-export default class Homepage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      comments: [],
-      userComment: '',
-    };
-  }
+const App = () => {
+  const [posts, setPosts] = useState([]);
+  const [newPost, setNewPost] = useState('');
 
-  handleCommentChange = (comment) => {
-    this.setState({ userComment: comment });
+  const addPost = () => {
+    if (newPost) {
+      const post = {
+        id: Math.random().toString(),
+        content: newPost,
+      };
+
+      setPosts([...posts, post]);
+      setNewPost('');
+    }
   };
 
-  handleCommentSubmit = () => {
-    const { comments, userComment } = this.state;
-    this.setState({ comments: [...comments, userComment], userComment: '' });
-  };
+  return (
+    <View style={styles.container}>
+      <View style={styles.formContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your text"
+          value={newPost}
+          onChangeText={(text) => setNewPost(text)}
+        />
 
-  render() {
-    const { navigate } = this.props.navigation;
-    const { comments, userComment } = this.state;
+        <TouchableOpacity style={styles.button} onPress={addPost}>
+          <Text style={styles.buttonText}>Post</Text>
+        </TouchableOpacity>
+      </View>
 
-    return (
-      <>
-        <View
-          style={{
-            marginHorizontal: 55,
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 200,
-          }}
-        >
-          <Text>You Have Successfully Logged In</Text>
-        </View>
+      <ScrollView style={styles.postsContainer}>
+        {posts.map((post) => (
+          <View key={post.id} style={styles.post}>
+            <Text>{post.content}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
 
-        <View
-          style={{
-            marginHorizontal: 55,
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 500,
-            backgroundColor: '#00716F',
-            paddingVertical: 10,
-            borderRadius: 23,
-          }}
-        >
-          <Text onPress={() => navigate('Login')} style={{ color: 'white', fontFamily: 'SemiBold' }}>
-            Logout
-          </Text>
-        </View>
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  formContainer: {
+    marginBottom: 20,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 10,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  postsContainer: {
+    flex: 1,
+  },
+  post: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'gray',
+    padding: 10,
+    marginBottom: 10,
+  },
+});
 
-        <View
-          style={{
-            marginHorizontal: 55,
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 100,
-            backgroundColor: '#00716F',
-            paddingVertical: 10,
-            borderRadius: 23,
-          }}
-        >
-          <Text onPress={() => navigate('Profile')} style={{ color: 'white', fontFamily: 'SemiBold' }}>
-            Profile
-          </Text>
-        </View>
-
-        <View style={{ marginHorizontal: 55, marginTop: 20 }}>
-          <TextInput
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            placeholder="Enter your comment"
-            value={userComment}
-            onChangeText={this.handleCommentChange}
-          />
-          <Button onPress={this.handleCommentSubmit} title="Post Comment" />
-          <FlatList
-            data={comments}
-            renderItem={({ item }) => <Text>{item}</Text>}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
-      </>
-    );
-  }
-}
+export default App;
