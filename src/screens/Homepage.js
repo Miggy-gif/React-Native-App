@@ -1,46 +1,94 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet} from 'react-native';
 
-const App = () => {
-  const [posts, setPosts] = useState([]);
-  const [newPost, setNewPost] = useState('');
+export default class Homepage extends React.Component{
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      posts: [],
+      newPost: "",
+    };
+  }
 
-  const addPost = () => {
+  addPost = () => {
+    const {posts, newPost} = this.props
     if (newPost) {
       const post = {
         id: Math.random().toString(),
         content: newPost,
       };
 
-      setPosts([...posts, post]);
-      setNewPost('');
+      this.posts([...posts, post]);
+      this.newPost('');
+    }
+    else{
+      alert("No input")
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter your text"
-          value={newPost}
-          onChangeText={(text) => setNewPost(text)}
-        />
 
-        <TouchableOpacity style={styles.button} onPress={addPost}>
-          <Text style={styles.buttonText}>Post</Text>
-        </TouchableOpacity>
-      </View>
 
-      <ScrollView style={styles.postsContainer}>
-        {posts.map((post) => (
-          <View key={post.id} style={styles.post}>
-            <Text>{post.content}</Text>
+    render(){
+        const {navigate} = this.props.navigation
+        return (
+          <><View style={styles.container}>
+          <View style={styles.formContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your text"
+              onChangeText={(newPost) => this.setState({newPost})} />
+    
+            <TouchableOpacity style={styles.button} onPress={this.addPost}>
+              <Text style={styles.buttonText}>Post</Text>
+            </TouchableOpacity>
           </View>
-        ))}
-      </ScrollView>
-    </View>
-  );
+    
+          <ScrollView style={styles.postsContainer}>
+            {this.state.posts.map((post) => (
+              <View key={post.id} style={styles.post}>
+                <Text>{post.content}</Text>
+              </View>
+    
+            ))}
+          </ScrollView>
+        </View>
+        <View
+          style={{
+            marginHorizontal: 55,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 100,
+            backgroundColor: '#00716F',
+            paddingVertical: 10,
+            borderRadius: 23,
+            height: 40,
+          }}
+        >
+            <Text onPress={() => navigate('Profile')} style={{ color: 'white', fontFamily: 'SemiBold'}}>
+              Profile
+            </Text>
+          </View>
+          <View
+          style={{
+            marginHorizontal: 55,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 10,
+            backgroundColor: '#00716F',
+            paddingVertical: 10,
+            borderRadius: 23,
+            height: 40,
+          }}
+        >
+            <Text onPress={() => navigate('Login')} style={{ color: 'white', fontFamily: 'SemiBold'}}>
+              Logout
+            </Text>
+          </View>
+          </>
+
+        );
+                    }
 };
 
 const styles = StyleSheet.create({
@@ -79,4 +127,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;

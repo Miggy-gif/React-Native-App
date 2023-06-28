@@ -19,11 +19,6 @@ export default class Register extends React.Component {
   handleSubmit = () => {
     const { email, pass, name, lastname, number, gender, birthdate } = this.state;
 
-    if (email === '' || pass === '' || name === '' || lastname === '' || number === '' || gender === '' || birthdate === '') {
-      alert('Fill out details first!');
-      return;
-    }
-
     const userData = {
       name: name,
       email: email,
@@ -34,6 +29,13 @@ export default class Register extends React.Component {
       gender: gender,
       birthdate: birthdate,
     };
+
+    if (email === '' || pass === '' || name === '' || lastname === '' || number === '' || gender === '' || birthdate === '') {
+      alert('Fill out details first!');
+      return;
+    }
+
+    
 
     axios
       .post('http://yourbackendapi.com/register', userData)
@@ -47,6 +49,7 @@ export default class Register extends React.Component {
   };
 
   render() {
+    const {navigate} = this.props.navigation
     return (
       <View style={{ backgroundColor: '#FFF', height: '100%' }}>
         <View
@@ -169,7 +172,15 @@ export default class Register extends React.Component {
         >
           <Text style={{ color: 'white', fontFamily: 'SemiBold' }}>Register</Text>
         </TouchableOpacity>
-
+        
+        <Text onPress={() => navigate('Login')} style={{
+                    alignSelf:"center",
+                    color:"#00716F",
+                    fontFamily:"SemiBold",
+                    paddingVertical:30
+                }}>
+              Back
+            </Text>
         
         
       </View>
